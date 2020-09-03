@@ -1,4 +1,4 @@
-const apiUrl = `http://127.0.0.1:8000/`;
+const apiUrl = `https://prithivi.pythonanywhere.com/`;
 
 export const getCustomerDetails = () => {
   return fetch(apiUrl + "customerdetails/");

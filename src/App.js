@@ -38,10 +38,11 @@ function App() {
           {(close) => (
             <div className="modal">
               <a className="close" onClick={close}>
-                &times;
+               <span>&times;</span> 
               </a>
               <div className="header"> Upload customer details </div>
               <div className="content">
+                <div className="xlsupload">
                 Xls upload
                 <input
                   type="checkbox"
@@ -50,6 +51,7 @@ function App() {
                   checked={appData.form_flag}
                   onChange={handleFlagChanges}
                 />
+                </div>
                 {!appData.form_flag ? (
                   <RegisterForm close={close} />
                 ) : (
