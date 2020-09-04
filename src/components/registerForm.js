@@ -113,7 +113,7 @@ const RegisterForm = (props) => {
   } = formData;
   return (
     <React.Fragment>
-      <table>
+      <table className="RegisterFormTable">
         <tr>
           <td>
             <label>Register as : </label>

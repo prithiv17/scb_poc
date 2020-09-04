@@ -25,6 +25,8 @@ input[type="button"]{
   background-color: #337ab7;
   border-color: #2e6da4;
   margin-top: 20px;
+  float: right;
+  margin-right: 24px;
 }
 table {
   border-collapse: collapse;
@@ -141,16 +143,34 @@ h3 {
 .popup-content{
   margin-top: 40px!important;
   padding: 0!important;
+  width: 50%!important;
 }
 .close span{
   position: relative;
   top:-3px;
+  left: 0.5px;
 }
 .customTable{
   margin-top: 80px!important;
 }
-.customTable tr,th,td{
- border:1px solid #aaa;
+.customTable tr,.customTable th,.customTable td{
+ border:1px solid #aaa!important;
  font-size: 11px;
  text-transform: capitalize;
+}
+.xlsupload{
+  float: right;
+  margin-right: 21px;
+  margin-top: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+input[type="file"]{
+  margin-top: 13px;
+  float: left;
+  margin-bottom: 18px;
+  margin-left: 21px;
+}
+.RegisterFormTable tr,th,td{
+border:none!important;
 }

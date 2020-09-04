@@ -17,7 +17,7 @@ const CustomerList = (props) => {
   };
 
   return (
-    <table align="center" className="table table-bordered customTable">
+    <table align="center" className="customTable">
       <tr>
         <th>REGISTER AS</th>
         <th>FIRST NAME</th>
