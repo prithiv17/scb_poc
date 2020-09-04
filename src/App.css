@@ -5,13 +5,14 @@ select {
 .popup-overlay {
   overflow: auto;
 }
-input[type="text"],
+input[type="text"],input[type="email"],input[type="date"],
 select {
-  width: 96%;
+  width: 93%;
   padding: 7px;
   margin: 5px 0;
   border: 1px solid #aaa;
-    border-radius: 5px;
+  border-radius: 5px;
+ 
 }
 select{
   width:100%
@@ -24,8 +25,7 @@ input[type="button"]{
   color: #fff;
   background-color: #337ab7;
   border-color: #2e6da4;
-  margin-top: 20px;
-  float: right;
+  float: right; 
   margin-right: 24px;
 }
 table {
@@ -79,6 +79,9 @@ h3 {
   text-align: center;
   padding: 12px 0;
   font-weight: 500;
+  background: #5fa4c7;
+  color: #fff;
+  border: 1px solid #5fa4c7;
 }
 .modal > .content {
   width: 99%;
@@ -143,7 +146,9 @@ h3 {
 .popup-content{
   margin-top: 40px!important;
   padding: 0!important;
-  width: 50%!important;
+  width: auto!important;
+
+  max-width: 90%;
 }
 .close span{
   position: relative;
@@ -152,6 +157,10 @@ h3 {
 }
 .customTable{
   margin-top: 80px!important;
+  margin-bottom: 15px;
+}
+.customTable th {
+  background: #eee;
 }
 .customTable tr,.customTable th,.customTable td{
  border:1px solid #aaa!important;
@@ -177,4 +186,12 @@ border:none!important;
 
 .errorDisplay{
   color:red;
+}
+.subButton{
+  width:100%;
+  float:right;
+}
+.RegisterFormTable label{
+  font-weight: bold;
+    font-size: 14px;
 }

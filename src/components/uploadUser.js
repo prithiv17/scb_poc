@@ -55,7 +55,7 @@ const UploadUser = (props) => {
     <div>
       <input type="file" id="input" onChange={handleChanges} />
       {xlsData.data.length > 0 && <CustomerList cust_list={xlsData.data} />}
-      <input type="button" onClick={onSubmit} value="Submit" />
+      <div className="subButton"> <input type="button" onClick={onSubmit} value="Submit" /></div>
     </div>
   );
 };
