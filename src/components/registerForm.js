@@ -5,27 +5,55 @@ import { addCustomerDetails, getCustomerDetails } from "../services";
 import { customerDetails } from "../actions";
 
 import { useDispatch } from "react-redux";
+import {CountiresData,IdTypes} from '../Common/CountiresData'
 
 const RegisterForm = (props) => {
   let { close } = props;
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    register_as: "",
-    first_name: "",
-    last_name: "",
-    mail_id: "",
-    contact_number: "",
-    country: "",
-    state: "",
-    city: "",
-    street: "",
-    gender: "",
-    marital_status: "",
-    date_of_birth: null,
-    id_proof_type: "",
-    id_proof_detail: "",
+            register_as: "Person",
+            first_name: "",
+            last_name: "",
+            mail_id: "",
+            contact_number: "",
+            country: "",
+            state: "",
+            city: "",
+            street: "",
+            gender: "",
+            marital_status: "",
+            date_of_birth: null,
+            id_proof_type: "",
+            id_proof_detail: "",
+            countires:[],
+            states:[],
+            cities:[],
+            formErrors:{
+              first_name_error: "",
+              last_name_error: "",
+              mail_id_error: "",
+              contact_number_error: "",
+              country_error: "",
+              state_error: "",
+              city_error: "",
+              street_error: "",
+              gender_error: "",
+              marital_status_error: "",
+              date_of_birth_error: null,
+              id_proof_type_error: "",
+              id_proof_detail_error: "",
+            }
   });
+
+  //Added useEffect for initial loading of countires data into countires array
+  useEffect(()=>{
+        setFormData({
+          ...formData,
+          countires:CountiresData
+        })
+  },[])
+
   const handleChanges = (event) => {
     let { name, value } = event.target;
     setFormData({
@@ -33,6 +61,26 @@ const RegisterForm = (props) => {
       [name]: value,
     });
   };
+
+  //Added this method to trigger an event while Country Changes
+  const changeCountry=(event)=>{    
+    setFormData({
+      ...formData,
+      country:event.target.value,
+      states:formData.countires.find(cntry=>cntry.country===event.target.value).states
+    })   
+  }
+
+  //Added this method to trigger an event while State Changes
+
+  const changeState=(event)=>{
+    setFormData({
+      ...formData,
+      state:event.target.value,
+      cities:formData.countires.find(cntry=>cntry.country===formData.country).states.find(state=>state.name===event.target.value).city
+      })
+  }
+
   const onSubmit = () => {
     addCustomerDetails(formData).then((response) => {
       //do something awesome that makes the world a better place
@@ -45,6 +93,7 @@ const RegisterForm = (props) => {
       }
     });
     close();
+    console.log(formData.state)
   };
   let {
     register_as,
@@ -84,7 +133,7 @@ const RegisterForm = (props) => {
         </tr>
         <tr>
           <td>
-            <label>First name : </label>
+              <label>{register_as==='Person'?'First name:' :'Organization Name:'} </label>
           </td>
           <td>
             <input
@@ -96,7 +145,7 @@ const RegisterForm = (props) => {
             />
           </td>
         </tr>
-        <tr>
+        <tr hidden={register_as==='Business'}>
           <td>
             <label>Last name : </label>
           </td>
@@ -116,7 +165,7 @@ const RegisterForm = (props) => {
           </td>
           <td>
             <input
-              type="text"
+              type="email"
               className="mail_id"
               name="mail_id"
               value={mail_id}
@@ -143,13 +192,10 @@ const RegisterForm = (props) => {
             <label>Country : </label>
           </td>
           <td>
-            <input
-              type="text"
-              className="country"
-              name="country"
-              value={country}
-              onChange={handleChanges}
-            />
+           <select name='country' value={country} onChange={changeCountry}>
+             <option>--Choose Country--</option>
+             {CountiresData.map((cntry,index)=><option key={index}>{cntry.country}</option>)}
+           </select>
           </td>
         </tr>
         <tr>
@@ -157,13 +203,10 @@ const RegisterForm = (props) => {
             <label>State : </label>
           </td>
           <td>
-            <input
-              type="text"
-              className="state"
-              name="state"
-              value={state}
-              onChange={handleChanges}
-            />
+            <select name='state' value={state} onChange={changeState}>
+             <option>--Choose State--</option>
+                {formData.states.map((state,index)=><option key={index}>{state.name}</option>)}
+           </select>
           </td>
         </tr>
         <tr>
@@ -171,13 +214,10 @@ const RegisterForm = (props) => {
             <label>City : </label>{" "}
           </td>
           <td>
-            <input
-              type="text"
-              className="city"
-              name="city"
-              value={city}
-              onChange={handleChanges}
-            />
+          <select name='city' value={city} onChange={handleChanges}>
+              <option>--Choose City--</option>
+               {formData.cities.map((city,index)=><option key={index}>{city}</option>)} 
+          </select>            
           </td>
         </tr>
         <tr>
@@ -194,41 +234,63 @@ const RegisterForm = (props) => {
             />
           </td>
         </tr>
-        <tr>
+        <tr hidden={register_as==='Business'}>
           <td>
             <label>Gender : </label>
           </td>
           <td>
             <input
-              type="text"
+              type="radio"
               className="gender"
               name="gender"
-              value={gender}
+              value='male'
               onChange={handleChanges}
+              checked={gender==='male'}
             />
+            <label>M</label>
+            <input
+              type="radio"
+              className="gender"
+              name="gender"
+              value='female'
+              onChange={handleChanges}
+              checked={gender==='female'}
+            />
+            <label>F</label>
           </td>
         </tr>
-        <tr>
+        <tr hidden={register_as==='Business'}>
           <td>
             <label>Marital status : </label>
           </td>
           <td>
             <input
-              type="text"
+              type="radio"
               className="marital_status"
               name="marital_status"
-              value={marital_status}
+              value='single'
               onChange={handleChanges}
+              checked={marital_status==='single'}
             />
+            <label>Single</label>
+            <input
+              type="radio"
+              className="marital_status"
+              name="marital_status"
+              value='married'
+              onChange={handleChanges}
+              checked={marital_status==='married'}
+            />
+            <label>Married</label>
           </td>
         </tr>
-        <tr>
+        <tr hidden={register_as==='Business'}>
           <td>
             <label>Date of birth : </label>
           </td>
           <td>
             <input
-              type="text"
+              type="date"
               className="date_of_birth"
               name="date_of_birth"
               value={date_of_birth}
@@ -241,13 +303,9 @@ const RegisterForm = (props) => {
             <label>Id proof type : </label>{" "}
           </td>
           <td>
-            <input
-              type="text"
-              className="id_proof_type"
-              name="id_proof_type"
-              value={id_proof_type}
-              onChange={handleChanges}
-            />
+          <select name='id_proof_type' value={id_proof_type} onChange={handleChanges}>
+             {IdTypes.map((idType,index)=><option key={index}>{idType}</option>)}
+           </select>
           </td>
         </tr>
         <tr>
