@@ -247,7 +247,7 @@ const RegisterForm = (props) => {
               onChange={handleChanges}
               checked={gender==='male'}
             />
-            <label>M</label>
+            <label>Male</label>
             <input
               type="radio"
               className="gender"
@@ -256,7 +256,7 @@ const RegisterForm = (props) => {
               onChange={handleChanges}
               checked={gender==='female'}
             />
-            <label>F</label>
+            <label>Female</label>
           </td>
         </tr>
         <tr hidden={register_as==='Business'}>
