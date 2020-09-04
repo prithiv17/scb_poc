@@ -6,10 +6,25 @@ import { customerDetails } from "../actions";
 
 import { useDispatch } from "react-redux";
 import {CountiresData,IdTypes} from '../Common/CountiresData'
+import "../App.css";
 
 const RegisterForm = (props) => {
   let { close } = props;
   const dispatch = useDispatch();
+
+   const emailRegex= new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i)
+
+  const mobileRegex=new RegExp(/^[0-9\b]+$/)
+
+  const formValid=formErrors=>{
+    let valid=true;
+
+        Object.values(formErrors).forEach(val=>{
+          val && (valid=false)
+            })
+
+    return valid
+  }
 
   const [formData, setFormData] = useState({
             register_as: "Person",
@@ -43,6 +58,7 @@ const RegisterForm = (props) => {
               date_of_birth_error: null,
               id_proof_type_error: "",
               id_proof_detail_error: "",
+              submitError:''
             }
   });
 
@@ -56,10 +72,33 @@ const RegisterForm = (props) => {
 
   const handleChanges = (event) => {
     let { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+
+        let formErrors=formData.formErrors
+        switch(name){
+          case 'first_name':
+          formErrors.first_name_error=  value.length<3 && value.length>0 ?"Minimum 3 Characters required":""
+          break;
+          case 'mail_id':
+            formErrors.mail_id_error= emailRegex.test(value)  && value.length>0 ?"":"Invalid Email format"
+            break;
+            case 'contact_number':
+              formErrors.contact_number_error= mobileRegex.test(value) && value.length>0?"":"Please enter only number"
+              break;
+              case 'street':
+              formErrors.street_error=  value.length<5 && value.length>0 ?"Please provide a valid address":""
+              break;
+              case 'id_proof_detail':
+                formErrors.id_proof_detail_error=  value.length<=0?"Please provide Id proof details":""
+                break;
+            
+          default:
+            break;
+        }
+        setFormData({
+          ...formData,
+          [name]: value
+        });
+
   };
 
   //Added this method to trigger an event while Country Changes
@@ -81,19 +120,23 @@ const RegisterForm = (props) => {
       })
   }
 
-  const onSubmit = () => {
-    addCustomerDetails(formData).then((response) => {
-      //do something awesome that makes the world a better place
-      if (response.status === 201) {
-        getCustomerDetails()
-          .then((res) => res.json())
-          .then((repos) => {
-            dispatch(customerDetails(repos));
+  const onSubmit = () => { 
+
+       if(formValid(formData.formErrors)){
+          addCustomerDetails(formData).then((response) => {
+            //do something awesome that makes the world a better place
+            if (response.status === 201) {
+              getCustomerDetails()
+                .then((res) => res.json())
+                .then((repos) => {
+                  dispatch(customerDetails(repos));
           });
       }
     });
     close();
-    console.log(formData.state)
+  }
+  console.log(formData.state)
+ 
   };
   let {
     register_as,
@@ -113,7 +156,7 @@ const RegisterForm = (props) => {
   } = formData;
   return (
     <React.Fragment>
-      <table className="RegisterFormTable">
+      <table>
         <tr>
           <td>
             <label>Register as : </label>
@@ -143,6 +186,7 @@ const RegisterForm = (props) => {
               value={first_name}
               onChange={handleChanges}
             />
+          {formData.formErrors.first_name_error.length>0 &&<span className='errorDisplay'>{formData.formErrors.first_name_error}</span>}
           </td>
         </tr>
         <tr hidden={register_as==='Business'}>
@@ -171,6 +215,7 @@ const RegisterForm = (props) => {
               value={mail_id}
               onChange={handleChanges}
             />
+            {formData.formErrors.mail_id_error.length>0 && <span className='errorDisplay'>{formData.formErrors.mail_id_error}</span>}
           </td>
         </tr>
         <tr>
@@ -185,6 +230,7 @@ const RegisterForm = (props) => {
               value={contact_number}
               onChange={handleChanges}
             />
+            {formData.formErrors.contact_number_error.length>0 && <span className='errorDisplay'>{formData.formErrors.contact_number_error}</span>}
           </td>
         </tr>
         <tr>
@@ -193,7 +239,6 @@ const RegisterForm = (props) => {
           </td>
           <td>
            <select name='country' value={country} onChange={changeCountry}>
-             <option>--Choose Country--</option>
              {CountiresData.map((cntry,index)=><option key={index}>{cntry.country}</option>)}
            </select>
           </td>
@@ -204,7 +249,6 @@ const RegisterForm = (props) => {
           </td>
           <td>
             <select name='state' value={state} onChange={changeState}>
-             <option>--Choose State--</option>
                 {formData.states.map((state,index)=><option key={index}>{state.name}</option>)}
            </select>
           </td>
@@ -215,7 +259,6 @@ const RegisterForm = (props) => {
           </td>
           <td>
           <select name='city' value={city} onChange={handleChanges}>
-              <option>--Choose City--</option>
                {formData.cities.map((city,index)=><option key={index}>{city}</option>)} 
           </select>            
           </td>
@@ -232,6 +275,7 @@ const RegisterForm = (props) => {
               value={street}
               onChange={handleChanges}
             />
+            {formData.formErrors.street_error && <span className='errorDisplay'>{formData.formErrors.street_error}</span>}
           </td>
         </tr>
         <tr hidden={register_as==='Business'}>
@@ -320,6 +364,7 @@ const RegisterForm = (props) => {
               value={id_proof_detail}
               onChange={handleChanges}
             />
+            {formData.formErrors.id_proof_detail_error.length>0 && <span className='errorDisplay'>{formData.formErrors.id_proof_detail_error}</span>}
           </td>
         </tr>
       </table>
