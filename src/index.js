@@ -6,7 +6,7 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import reducer from "./reducer";
-const initialstate = { customer_details: [] };
+const initialstate = { customer_details: [], authentication: false };
 const store = createStore(reducer, initialstate);
 ReactDOM.render(
   <Provider store={store}>

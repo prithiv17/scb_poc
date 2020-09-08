@@ -4,3 +4,14 @@ export function customerDetails(data) {
     data: data,
   };
 }
+
+export function authenticate(data) {
+  if (data.type === "LOGIN")
+    return {
+      type: "LOGIN",
+    };
+  else
+    return {
+      type: "LOGOUT",
+    };
+}
